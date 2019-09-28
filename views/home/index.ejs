@@ -4,10 +4,13 @@
 
 <form id="new-message">
   <textarea name="body" placeholder="Type your message..."></textarea>
+  <input type="text" name="username">
   <input type="submit" value='Post Message' />
 </form>
 <br>
-<button>Sort</button>
+<button onclick="filteringByFlag(true)">Sort</button>
+<input type="text" name="fullname" id="fullname">
+<button onclick="filteringByFlag(false)">Sort</button>
 <ul id="messages"></ul>
 
 <%- include('../partials/footer') %>

@@ -5,10 +5,23 @@ const {
 module.exports = {
   async index(req, res, next) {
     try {
-      const messages = await Message.findAll({
+      const {
+        flagged,
+        username
+      } = req.query;
+      let messages = null;
+      let whereObj = {};
+      if (flagged) {
+        whereObj.flagged = true;
+      }
+      if (username) {
+        whereObj.username = username;
+      }
+      messages = await Message.findAll({
         order: [
           ["createdAt", "DESC"]
-        ]
+        ],
+        where: whereObj
       });
       res.json(messages);
     } catch (error) {

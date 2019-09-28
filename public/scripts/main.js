@@ -34,6 +34,20 @@ function changeFlag(id, flagged) {
     }).then(response => location.reload());
 }
 
+function filteringByFlag(flagged) {
+    event.preventDefault;
+    fetch(`/messages?flagged=${flagged}&username=${document.querySelector("#fullname").value}`)
+        .then(response => response.json())
+        .then(data => {
+            let html = '';
+            for (const item of data) {
+                html += `<li style="background:${item.flagged?"lightblue":"lightpink"}">${item.body} | posted by: ${item.username} | <button onclick="changeFlag(${item.id},${item.flagged})">${item.flagged?"Unflag it":"Flag it"}</button></li>`;
+            }
+            document.querySelector("#messages").innerHTML = html;
+        });
+}
+
+
 // POST REQUEST
 // fetch('/messages', {
 //     method: 'POST',
