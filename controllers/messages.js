@@ -58,16 +58,13 @@ module.exports = {
     } = req.params;
     const {
       username,
-      flagged,
       body
     } = req.body;
-
     try {
       const message = await Message.findById(id);
       await message.update({
         username,
-        body,
-        flagged
+        body
       });
       res.status(200).end();
     } catch (error) {

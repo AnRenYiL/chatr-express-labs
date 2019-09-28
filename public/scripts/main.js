@@ -16,7 +16,7 @@ fetch('/messages')
     .then(data => {
         let html = '';
         for (const item of data) {
-            html += `<li style="background:${item.flagged?"lightblue":"lightpink"}">${item.body} | posted by: ${item.username} | <button onclick="changeFlag(${item.id},${item.flagged})">${item.flagged?"Unflag it":"Flag it"}</button></li>`;
+            html += `<li style="background:${item.flagged?"lightblue":"lightpink"}"><span onclick="fillTheContent(this,${item.id},'${item.username}')">${item.body}</span> | posted by: ${item.username} | <button onclick="changeFlag(${item.id},${item.flagged})">${item.flagged?"Unflag it":"Flag it"}</button></li>`;
         }
         document.querySelector("#messages").innerHTML = html;
     })
@@ -41,13 +41,50 @@ function filteringByFlag(flagged) {
         .then(data => {
             let html = '';
             for (const item of data) {
-                html += `<li style="background:${item.flagged?"lightblue":"lightpink"}">${item.body} | posted by: ${item.username} | <button onclick="changeFlag(${item.id},${item.flagged})">${item.flagged?"Unflag it":"Flag it"}</button></li>`;
+                html += `<li style="background:${item.flagged?"lightblue":"lightpink"}"><span onclick="fillTheContent(${item.id},${item.username})">${item.body}</span> | posted by: ${item.username} | <button onclick="changeFlag(${item.id},${item.flagged})">${item.flagged?"Unflag it":"Flag it"}</button></li>`;
             }
             document.querySelector("#messages").innerHTML = html;
         });
 }
 
+function fillTheContent(event, id, username) {
+    document.querySelector("#body").value = event.innerText;
+    document.querySelector("#username").value = username ? username : '';
+    document.querySelector("#userid").innerText = id;
+    document.querySelector("#new-message").removeEventListener('submit', updateMSG);
+    document.querySelector("#new-message").removeEventListener('submit', createMSG);
+    document.querySelector("#new-message").addEventListener('submit', updateMSG);
+}
 
+function updateMSG() {
+    fetch(`/messages/${document.querySelector("#userid").innerText}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: document.querySelector("#username").value,
+            body: document.querySelector("#body").value
+        })
+    }).then(response => location.reload());
+}
+
+function createMSG() {
+    fetch(`/messages/`, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: document.querySelector("#username").value,
+            flagged: false,
+            body: document.querySelector("#body").value
+        })
+    }).then(response => location.reload());
+}
+window.onload = function () {
+    document.querySelector("#new-message").addEventListener('submit', createMSG);
+}
 // POST REQUEST
 // fetch('/messages', {
 //     method: 'POST',
