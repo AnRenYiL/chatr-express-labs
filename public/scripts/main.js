@@ -50,9 +50,10 @@ function filteringByFlag(flagged) {
 function fillTheContent(event, id, username) {
     document.querySelector("#body").value = event.innerText;
     document.querySelector("#username").value = username ? username : '';
-    document.querySelector("#userid").innerText = id;
-    document.querySelector("#new-message").removeEventListener('submit', updateMSG);
-    document.querySelector("#new-message").removeEventListener('submit', createMSG);
+    document.querySelector("#userid").innerText = "UserId: " + id;
+    // document.querySelector("#new-message").removeEventListener('submit', updateMSG);
+    // document.querySelector("#new-message").removeEventListener('submit', createMSG);
+    document.querySelector("#new-message").onsubmit = null;
     document.querySelector("#new-message").addEventListener('submit', updateMSG);
 }
 
